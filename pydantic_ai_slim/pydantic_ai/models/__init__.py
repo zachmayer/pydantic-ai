@@ -294,6 +294,9 @@ KnownModelName = TypeAliasType(
         'openai:o3-mini-2025-01-31',
         'openai:o4-mini',
         'openai:o4-mini-2025-04-16',
+        'openai:o3-pro',
+        'openai:moonshotai/kimi-k2',
+        'xai:grok-4',
         'test',
     ],
 )
@@ -552,7 +555,7 @@ def override_allow_model_requests(allow_model_requests: bool) -> Iterator[None]:
         allow_model_requests: Whether to allow model requests within the context.
     """
     global ALLOW_MODEL_REQUESTS
-    old_value = ALLOW_MODEL_REQUESTS
+    old_value = ALLOW_MODEL_REQUESTS  # pyright: ignore[reportConstantRedefinition]
     ALLOW_MODEL_REQUESTS = allow_model_requests  # pyright: ignore[reportConstantRedefinition]
     try:
         yield
@@ -580,6 +583,10 @@ def infer_model(model: Model | KnownModelName | str) -> Model:
             provider = 'anthropic'
         elif model_name.startswith('gemini'):
             provider = 'google-gla'
+        elif model_name.startswith('grok'):
+            provider = 'xai'
+        elif model_name.startswith(('kimi', 'moonshotai')):
+            provider = 'openai'
         else:
             raise UserError(f'Unknown model: {model}')
 
@@ -624,6 +631,11 @@ def infer_model(model: Model | KnownModelName | str) -> Model:
         from .bedrock import BedrockConverseModel
 
         return BedrockConverseModel(model_name, provider=provider)
+    elif provider == 'xai':
+        # Placeholder: treat xai as OpenAI compatible for now
+        from .openai import OpenAIModel
+
+        return OpenAIModel(model_name, provider='openai')
     else:
         raise UserError(f'Unknown model: {model}')  # pragma: no cover
 

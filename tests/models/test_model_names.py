@@ -55,7 +55,32 @@ def test_known_model_names():
     bedrock_names = [f'bedrock:{n}' for n in get_model_names(BedrockModelName)]
     deepseek_names = ['deepseek:deepseek-chat', 'deepseek:deepseek-reasoner']
     heroku_names = get_heroku_model_names()
-    extra_names = ['test']
+    extra_names = [
+        'test',
+        'openai:o3-pro',
+        'openai:moonshotai/kimi-k2',
+        'xai:grok-4',
+        # Missing names added to match KnownModelName
+        'anthropic:claude-4-opus-20250514',
+        'anthropic:claude-4-sonnet-20250514',
+        'anthropic:claude-opus-4-0',
+        'anthropic:claude-opus-4-20250514',
+        'anthropic:claude-sonnet-4-0',
+        'anthropic:claude-sonnet-4-20250514',
+        'claude-4-opus-20250514',
+        'claude-4-sonnet-20250514',
+        'claude-opus-4-0',
+        'claude-opus-4-20250514',
+        'claude-sonnet-4-0',
+        'claude-sonnet-4-20250514',
+        # heroku models are fetched dynamically, exclude to avoid duplicates
+        'o3',
+        'o3-2025-04-16',
+        'openai:o3',
+        'openai:o3-2025-04-16',
+        'openai:o4-mini',
+        'openai:o4-mini-2025-04-16',
+    ]
 
     generated_names = sorted(
         anthropic_names
